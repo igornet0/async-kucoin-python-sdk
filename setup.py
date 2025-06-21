@@ -5,16 +5,16 @@ from setuptools import setup
 
 
 setup(
-    name='kucoin-python',
-    version='v1.0.26',
+    name='async-kucoin-python',
+    version='v2.0.0',
     packages=['kucoin', 'kucoin/base_request', 'kucoin/margin', 'kucoin/market', 'kucoin/trade', 'kucoin/user','kucoin/lending','kucoin/earn',
               'kucoin/websocket', 'kucoin/ws_token'],
     license="MIT",
-    author='Arthur',
-    author_email="arthur.zhang@kucoin.com",
-    url='https://github.com/Kucoin/kucoin-python-sdk',
+    author='Igor',
+    author_email="igor.kucoin@pm.me",
+    url='https://github.com/Kucoin/async-kucoin-python-sdk',
     description="kucoin-api-sdk",
-    install_requires=['requests', 'websockets'],
+    install_requires=['requests', 'websockets', 'aiohttp'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
