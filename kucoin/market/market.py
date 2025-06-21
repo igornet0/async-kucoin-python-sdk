@@ -326,7 +326,49 @@ class MarketData(KucoinBaseRestApi):
         }
         if kwargs:
             params.update(kwargs)
+            
         return self._request('GET', '/api/v1/market/candles', params=params)
+    
+    async def async_get_kline(self, symbol, kline_type, **kwargs):
+        """
+        https://docs.kucoin.com/#get-klines
+        :param symbol: symbol (Mandatory)
+        :type: str
+        :param kline_type: Type of candlestick patterns (Mandatory)
+        :type: str
+        :param kwargs: [Optional] startAt, endAt, currentPage, pageSize
+        :return:
+        [
+          [
+              "1545904980",             //Start time of the candle cycle
+              "0.058",                  //opening price
+              "0.049",                  //closing price
+              "0.058",                  //highest price
+              "0.049",                  //lowest price
+              "0.018",                  //Transaction amount
+              "0.000945"                //Transaction volume
+          ],
+          [
+              "1545904920",
+              "0.058",
+              "0.072",
+              "0.072",
+              "0.058",
+              "0.103",
+              "0.006986"
+          ]
+        ]
+        """
+        params = {
+            'symbol': symbol,
+            'type': kline_type
+        }
+        if kwargs:
+            params.update(kwargs)
+            
+        result = await self._request_async('GET', '/api/v1/market/candles', params=params)
+
+        return result
 
     def get_currencies(self):
         """
