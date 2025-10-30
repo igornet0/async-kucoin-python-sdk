@@ -1,0 +1,22 @@
+Metadata-Version: 2.2
+Name: async-kucoin-python
+Version: 2.0.0
+Summary: kucoin-api-sdk
+Home-page: https://github.com/Kucoin/async-kucoin-python-sdk
+Author: Igor
+Author-email: igor.kucoin@pm.me
+License: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+License-File: LICENSE
+Requires-Dist: requests
+Requires-Dist: websockets
+Requires-Dist: aiohttp
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: summary

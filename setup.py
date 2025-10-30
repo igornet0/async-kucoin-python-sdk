@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name='async-kucoin-python',
-    version='v2.0.0',
+    version='v2.0.1',
     packages=['kucoin', 'kucoin/base_request', 'kucoin/margin', 'kucoin/market', 'kucoin/trade', 'kucoin/user','kucoin/lending','kucoin/earn',
               'kucoin/websocket', 'kucoin/ws_token'],
     license="MIT",

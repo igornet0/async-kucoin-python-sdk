@@ -15,8 +15,12 @@ import socket
 
 from requests import Session
 
-# Используем статическую версию для локальной реализации
-version = 'v2.0.0'
+try:
+    import pkg_resources
+
+    version = 'v' + pkg_resources.get_distribution("kucoin-python").version
+except (ModuleNotFoundError, pkg_resources.DistributionNotFound):
+    version = 'v1.0.0'
 
 
 class KucoinBaseRestApi(object):
@@ -47,9 +51,6 @@ class KucoinBaseRestApi(object):
         self._session = None
         self._async_session = None
         self.semaphore = asyncio.Semaphore(max_concurrent)
-
-    def set_url(self, url:str):
-        self.url = url
 
     @property
     def session(self) -> Session:
@@ -109,10 +110,8 @@ class KucoinBaseRestApi(object):
                     "Content-Type": "application/json",
                     "KC-API-KEY-VERSION": "2"
                 }
-       
-        headers["User-Agent"] = "User/" + version
+        headers["User-Agent"] = "kucoin-python-sdk/" + version
         url = urljoin(self.url, uri)
-
         if not self.session:
             self.session = requests.Session()
             if self.TCP_NODELAY == 1:
@@ -121,7 +120,6 @@ class KucoinBaseRestApi(object):
                     (socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
                 ]
                 self.session.mount('https://', adapter)
-
         if method in ['GET', 'DELETE']:
             response_data = self.session.request(method, url, headers=headers, timeout=timeout)
         else:

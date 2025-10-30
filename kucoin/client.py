@@ -1,9 +1,9 @@
-from kucoin.earn.earn import EarnData
-from kucoin.lending.lending import LendingData
-from kucoin.margin.margin import MarginData
-from kucoin.market.market import MarketData
-from kucoin.trade.trade import TradeData
-from kucoin.user.user import UserData
+from kucoin.model_data.earn.earn import EarnData
+from kucoin.model_data.lending.lending import LendingData
+from kucoin.model_data.margin.margin import MarginData
+from kucoin.model_data.market.market import MarketData
+from kucoin.model_data.trade.trade import TradeData
+from kucoin.model_data.user.user import UserData
 from kucoin.ws_token.token import GetToken
 
 
