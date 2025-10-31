@@ -99,7 +99,6 @@ class TradeData(KucoinBaseRestApi):
 
         return self._request('POST', '/api/v1/margin/order/test', params=params)
 
-
     def create_limit_order(self, symbol, side, size, price, clientOid='', **kwargs):
         """
         Place Order
@@ -1721,3 +1720,16 @@ class TradeData(KucoinBaseRestApi):
         }
         """
         return self._request('DELETE', '/api/v1/hf/orders/cancelAll')
+
+    def get_position_list(self, symbol):
+        """
+        Get Position List
+        https://www.kucoin.com/docs/rest/spot-hf-trade-pro-account/get-position-list
+        :param symbol: Only returns position information for the specified trading pair
+        :return:
+        """
+        
+        return self._request('GET', '/api/v1/hf/positions', params={'symbol': symbol})
+
+
+        

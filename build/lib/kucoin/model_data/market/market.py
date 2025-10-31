@@ -1,13 +1,13 @@
+from typing import Any
 import warnings
 from kucoin.base_request.base_request import KucoinBaseRestApi
 
 
 class MarketData(KucoinBaseRestApi):
 
-    def get_symbol_list(self, **kwargs):
+    def get_symbol_list_spot(self, **kwargs):
         """
         https://docs.kucoin.com/#get-symbols-list
-        :param kwargs: [Optional] market
         :return:
         [
           {
@@ -32,9 +32,121 @@ class MarketData(KucoinBaseRestApi):
         params = {}
         if kwargs:
             params.update(kwargs)
-        return self._request('GET', '/api/v1/symbols', params=params)
+            
+        return self._request('GET', '/api/v2/symbols', params=params)
+    
+    def get_symbol_list_future(self, **kwargs):
+        """
+        https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-symbols
+        :return:
+        [
+          {
+            "code": "200000",
+            "data": {
+                "symbol": "XBTUSDTM",
+                "rootSymbol": "USDT",
+                "type": "FFWCSX",
+                "firstOpenDate": 1585555200000,
+                "expireDate": null,
+                "settleDate": null,
+                "baseCurrency": "XBT",
+                "quoteCurrency": "USDT",
+                "settleCurrency": "USDT",
+                "maxOrderQty": 1000000,
+                "marketMaxOrderQty": 1000000,
+                "maxPrice": 1000000.0,
+                "lotSize": 1,
+                "tickSize": 0.1,
+                "indexPriceTickSize": 0.01,
+                "multiplier": 0.001,
+                "initialMargin": 0.008,
+                "maintainMargin": 0.004,
+                "maxRiskLimit": 100000,
+                "minRiskLimit": 100000,
+                "riskStep": 50000,
+                "makerFeeRate": 2.0E-4,
+                "takerFeeRate": 6.0E-4,
+                "takerFixFee": 0.0,
+                "makerFixFee": 0.0,
+                "settlementFee": null,
+                "isDeleverage": true,
+                "isQuanto": true,
+                "isInverse": false,
+                "markMethod": "FairPrice",
+                "fairMethod": "FundingRate",
+                "fundingBaseSymbol": ".XBTINT8H",
+                "fundingQuoteSymbol": ".USDTINT8H",
+                "fundingRateSymbol": ".XBTUSDTMFPI8H",
+                "indexSymbol": ".KXBTUSDT",
+                "settlementSymbol": "",
+                "status": "Open",
+                "fundingFeeRate": 3.9E-5,
+                "predictedFundingFeeRate": null,
+                "fundingRateGranularity": 28800000,
+                "fundingRateCap": 0.003,
+                "fundingRateFloor": -0.003,
+                "period": 1,
+                "openInterest": "4555003",
+                "turnoverOf24h": 1.4315462540862274E9,
+                "volumeOf24h": 13039.374,
+                "markPrice": 110464.44,
+                "indexPrice": 110466.41,
+                "lastTradePrice": 110459.3,
+                "nextFundingRateTime": 16281155,
+                "nextFundingRateDateTime": 1761292800000,
+                "maxLeverage": 125,
+                "sourceExchanges": [
+                    "okex",
+                    "binance",
+                    "kucoin",
+                    "bybit",
+                    "bitmart",
+                    "gateio"
+                ],
+                "premiumsSymbol1M": ".XBTUSDTMPI",
+                "premiumsSymbol8H": ".XBTUSDTMPI8H",
+                "fundingBaseSymbol1M": ".XBTINT",
+                "fundingQuoteSymbol1M": ".USDTINT",
+                "lowPrice": 108307.2,
+                "highPrice": 111295.4,
+                "priceChgPct": 0.0165,
+                "priceChg": 1802.9,
+                "k": 490.0,
+                "m": 300.0,
+                "f": 1.3,
+                "mmrLimit": 0.3,
+                "mmrLevConstant": 125.0,
+                "supportCross": true,
+                "buyLimit": 115987.7,
+                "sellLimit": 104941.2,
+                "adjustK": null,
+                "adjustM": null,
+                "adjustMmrLevConstant": null,
+                "adjustActiveTime": null,
+                "crossRiskLimit": 5.0E8,
+                "marketStage": "NORMAL",
+                "preMarketToPerpDate": null
+            }
+        }
+        ]
+        """
+        params = {}
+        if kwargs:
+            params.update(kwargs)
+        
+        og_url = self.url
+        self.set_url("https://api-futures.kucoin.com")
+        data = self._request('GET', '/api/v1/contracts/active', params=params)
+        self.set_url(og_url)
 
-    def get_ticker(self, symbol):
+        def update_name(data: dict):
+            data.update({"name": f"future_{data.get('baseCurrency')}"})
+            return data
+        
+        data = list(map(update_name, data))
+        return data
+
+    def get_ticker_spot(self, symbol):
         """
         https://docs.kucoin.com/#get-ticker
         :param symbol: symbol (Mandatory)
@@ -56,6 +168,37 @@ class MarketData(KucoinBaseRestApi):
             'symbol': symbol
         }
         return self._request('GET', '/api/v1/market/orderbook/level1', params=params)
+
+    def get_ticker_future(self, symbol):
+        """
+        https://docs.kucoin.com/#get-ticker
+        :param symbol: symbol (Mandatory)
+            "sequence": 1697895100310,
+            "symbol": "XBTUSDM",
+            "side": "sell",
+            "size": 2936,
+            "tradeId": "1697901180000",
+            "price": "67158.4",
+            "bestBidPrice": "67169.6",
+            "bestBidSize": 32345,
+            "bestAskPrice": "67169.7",
+            "bestAskSize": 7251,
+            "ts": 1729163001780000000
+        :type: str
+        :return:
+        """
+        params = {
+            'symbol': symbol
+        }
+
+        og_url = self.url
+        self.set_url("https://api-futures.kucoin.com")
+        result = self._request('GET', '/api/v1/ticker', params=params)
+        self.set_url(og_url)
+
+        result.update({"name": f"future_{symbol}"})
+
+        return result
 
     def get_all_tickers(self):
         """
@@ -329,7 +472,7 @@ class MarketData(KucoinBaseRestApi):
             
         return self._request('GET', '/api/v1/market/candles', params=params)
     
-    async def async_get_kline(self, symbol, kline_type, **kwargs):
+    async def async_get_kline(self, symbol: str, kline_type: int, **kwargs):
         """
         https://docs.kucoin.com/#get-klines
         :param symbol: symbol (Mandatory)
@@ -369,6 +512,30 @@ class MarketData(KucoinBaseRestApi):
         result = await self._request_async('GET', '/api/v1/market/candles', params=params)
 
         return result
+    
+    async def async_get_kline_future(self, symbol: str, granularity: int, **kwargs):
+        """
+        :param symbol: symbol (Mandatory)
+        :type: str
+        :param granularity: Type of candlestick patterns (minutes)
+        :type: int
+        :param kwargs: [Optional] from, to
+        :return:
+        """
+        params = {
+            'symbol': symbol,
+            'granularity': granularity
+        }
+        if kwargs:
+            params.update(kwargs)
+            
+        # result = await self._request_async('GET', '/api/v1/market/candles', params=params)
+        og_url = self.url
+        self.set_url("https://api-futures.kucoin.com")
+        data = self._request('GET', '/api/v1/kline/query', params=params)
+        self.set_url(og_url)
+
+        return data
 
     def get_currencies(self):
         """

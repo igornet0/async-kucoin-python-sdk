@@ -112,6 +112,7 @@ class UserData(KucoinBaseRestApi):
             params['currency'] = currency
         if account_type:
             params['type'] = account_type
+            
         return self._request('GET', '/api/v1/accounts', params=params)
 
     def get_account(self, accountId):

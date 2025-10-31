@@ -1,1 +1,10 @@
 kucoin
+kucoin/base_request
+kucoin/model_data/earn
+kucoin/model_data/lending
+kucoin/model_data/margin
+kucoin/model_data/market
+kucoin/model_data/trade
+kucoin/model_data/user
+kucoin/websocket
+kucoin/ws_token
