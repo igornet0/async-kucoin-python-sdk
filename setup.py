@@ -1,14 +1,13 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 setup(
     name='async-kucoin-python',
     version='v2.0.1',
-    packages=['kucoin', 'kucoin/base_request', 'kucoin/margin', 'kucoin/market', 'kucoin/trade', 'kucoin/user','kucoin/lending','kucoin/earn',
-              'kucoin/websocket', 'kucoin/ws_token'],
+    packages=find_packages(),
     license="MIT",
     author='Igor',
     author_email="igor.kucoin@pm.me",
