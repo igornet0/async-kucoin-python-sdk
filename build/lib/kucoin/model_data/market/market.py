@@ -522,6 +522,9 @@ class MarketData(KucoinBaseRestApi):
         :param kwargs: [Optional] from, to
         :return:
         """
+        if 1 < granularity > 10080:
+            raise ValueError("Granularity must be between 1 and 10080")
+
         params = {
             'symbol': symbol,
             'granularity': granularity
@@ -532,7 +535,7 @@ class MarketData(KucoinBaseRestApi):
         # result = await self._request_async('GET', '/api/v1/market/candles', params=params)
         og_url = self.url
         self.set_url("https://api-futures.kucoin.com")
-        data = self._request('GET', '/api/v1/kline/query', params=params)
+        data = await self._request_async('GET', '/api/v1/kline/query', params=params)
         self.set_url(og_url)
 
         return data
