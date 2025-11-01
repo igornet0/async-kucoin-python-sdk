@@ -198,17 +198,17 @@ class KucoinBaseRestApi(object):
                     ) as response:
                         response.raise_for_status()
                         response = await response.json()
-                        # return response['data']
+                        return response['data']
                     
         except Exception as e:
             raise Exception(f"Error during HTTP request: {e}")
         except asyncio.TimeoutError:
             raise Exception("HTTP request timed out")
 
-        if not response:
-            raise Exception("No response data received")
+        # if not response:
+        #     raise Exception("No response data received")
 
-        return self.check_response_data(response)
+        # return self.check_response_data(response)
 
     @staticmethod
     def check_response_data(response_data):
